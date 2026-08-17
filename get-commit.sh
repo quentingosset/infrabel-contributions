@@ -20,7 +20,13 @@ echo "========================================="
 echo ""
 
 PARENT_DIR="$(pwd)"
+SCAN_DIR="${1:-$PARENT_DIR}"
 SCRIPT_NAME="$(basename "$0")"
+
+if [ ! -d "$SCAN_DIR" ]; then
+  echo "Erreur : le dossier à analyser n'existe pas : $SCAN_DIR"
+  exit 1
+fi
 
 #############################################
 # Clone ou pull
@@ -50,7 +56,8 @@ TOTAL_NEW=0
 # Scan projets
 #############################################
 
-for dir in */ ; do
+for dir in "$SCAN_DIR"/*/ ; do
+  [ -d "$dir" ] || continue
   PROJECT_NAME="$(basename "$dir")"
 
   if [ "$PROJECT_NAME" = "$OUTPUT_DIR" ]; then
